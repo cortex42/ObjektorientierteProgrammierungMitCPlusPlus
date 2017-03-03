@@ -1,0 +1,12 @@
+
+blatt03/blatt03/bin/Debug/
+
+*.cbp
+
+*.depend
+
+*.layout
+
+*.o
+
+blatt03/bin/Debug/
