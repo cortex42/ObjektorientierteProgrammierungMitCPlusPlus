@@ -14,3 +14,5 @@ blatt04/bin/Debug/
 blatt05/bin/Debug/
 
 *.exe
+
+*.out
