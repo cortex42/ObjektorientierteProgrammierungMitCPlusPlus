@@ -91,7 +91,6 @@ private:
 
 public:
 
-
     class Pointer {
     public:
         Pointer(Node *root) : node_ptr{root} {};
@@ -112,6 +111,50 @@ public:
 
         const T &operator*() const {
             return node_ptr->object;
+        }
+
+        class Iterator {
+        public:
+            Iterator(std::map<char, Trie *> &map, char c) : c{c}, map{map} {}
+
+            bool operator!=(const Iterator &other) const {
+                return getTrieAtKey() != other.getTrieAtKey();
+            }
+
+            Iterator &operator++() {
+                while (c <= 'z') {
+                    c++;
+                    if (getTrieAtKey()) {
+                        break;
+                    }
+                }
+
+                return *this;
+            }
+
+            char operator*() const {
+                return c;
+            }
+
+        private:
+            const Trie *const getTrieAtKey() const {
+                if (c <= 'z') {
+                    return map.at(c);
+                }
+
+                return nullptr;
+            }
+
+            char c;
+            std::map<char, Trie *> &map;
+        };
+
+        Iterator begin() {
+            return Iterator(node_ptr->subTries, 'a');
+        }
+
+        Iterator end() {
+            return Iterator(node_ptr->subTries, 'z' + 1);
         }
 
     private:
