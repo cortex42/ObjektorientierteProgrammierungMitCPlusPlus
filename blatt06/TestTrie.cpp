@@ -31,6 +31,4 @@ int main() {
     trie1.add("hell", std::string("bar"));
     std::cout << trie1.count() << std::endl;
     trie1.visit("hell", visit);
-
-    // todo check with valgrind
 }
