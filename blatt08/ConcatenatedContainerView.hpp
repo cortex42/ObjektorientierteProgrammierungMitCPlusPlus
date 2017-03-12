@@ -107,7 +107,7 @@ public:
             return *this;
         }
 
-        auto
+        typename std::common_type<typename V::value_type, typename W::value_type>::type
         operator*() const {
             if (position_container1 != end_container1) {
                 return *position_container1;
