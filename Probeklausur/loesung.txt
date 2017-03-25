@@ -1,0 +1,47 @@
+1a) siehe 1a.hpp
+1b) Operator *: Datentyp der Operanden: int, Datentyp der vom Operator zurückgegeben wird: int
+
+2a) Ein Maze besteht aus 0 bis n Rooms. Ein Room gehört genau zu einem Maze und hat selbst wiederum 0 bis n Rooms (als Neighbors)
+2b) Die Klasse Maze ist für die Beziehung zwischen Maze und Room verantwortlich.
+2c) Nein.
+2d) Nein, number_of_rooms ist private.
+2e) siehe Room.hpp
+2f) "#include "Room.hpp""
+2g) siehe Room.hpp
+2h) siehe Room.hpp
+
+3) siehe Aufgabe3.png
+
+4a) Iteratoren können als Verallgemeinerung von Zeigern gesehen werden, die einen universellen Zugriff auf Datenstrukturen erlauben. Der ForwardIterator unterstützt alle Operationen eines Input-Iterators (it1!=it2, it1==it2, *it, it->member, ++it, it++, *it++) und erlaubt es auch mehrmals über eine Sequenz zu iterieren und sukzessive auf die einzelnen Element zuzugreifen.
+
+4b) Der Container ist leer.
+4c) siehe 4c.cpp:
+        std::vector<double> a{1,2,3,4,5,6};
+
+        for(std::vector<double>::iterator it = a.begin(); it != a.end(); ++it) {
+                *it *= 2;
+        }
+
+5a) Stack, Heap, Data Segment für initalisierte und nicht-initialisierte globale und statische Variablen
+5b)
+	{
+		Person person1{"foo"}; // befindet sich im Stack
+		Person* person2 = new Person{"bar"}; // befindet sich auf dem Heap
+
+		delete person2; // freigeben von person2 auf Heap
+	} // freigeben von person1 auf Stack beim Verlassen des Blocks
+
+5c)
+Ein Speicherleck entsteht, wenn eine nicht mehr benötigte Ressource auf dem Heap nicht freigegeben wird.
+
+void foo() {
+	Person person = new Person{"foo"};
+} // keine Freigabe erfolgt => Speicherleck
+
+5d)
+Die std::shared_ptr-Klasse ist ein intelligenter Zeiger, der mehrere Zeiger auf ein gemeinsames Objekt mit externem Referenzzähler erlaubt.
+
+5e)
+siehe 5e.cpp
+
+
