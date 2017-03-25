@@ -9,28 +9,31 @@ static const std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 template<typename T>
 class Trie {
-    public:
-        Trie() : node{ new Node() } { std::cout << "default constructor" << std::endl; }
-        Trie(const Trie& other) : node { new Node(*other.node) } { std::cout << "copy constructor" << std::endl; }
-        ~Trie() {
-            delete node;
-            node = nullptr;
-            std::cout << "destructor" << std::endl;
-        }
+public:
+    Trie() : node{new Node()} { std::cout << "default constructor" << std::endl; }
+
+    Trie(const Trie &other) : node{new Node(*other.node)} { std::cout << "copy constructor" << std::endl; }
+
+    ~Trie() {
+        delete node;
+        node = nullptr;
+        std::cout << "destructor" << std::endl;
+    }
 
 	friend void swap(Trie& first, Trie& other) {
-                std::swap(first.node, other.node);
-        }
+        std::swap(first.node, other.node);
+    }
 
-        Trie& operator=(Trie other) {
-            std::cout << "assignment" << std::endl;
-	    swap(*this, other);
-	    return *this;
+    Trie &operator=(Trie other) {
+        std::cout << "assignment" << std::endl;
+        swap(*this, other);
+        return *this;
 	}
 
-        void add(const std::string& key, const T* object) {
+    void add(const std::string &key, T object) {
 		if(key.length() == 0) {
 			node->object = object;
+            node->has_object = true;
 		}else{
 			char c = key[0];
 
@@ -42,15 +45,16 @@ class Trie {
 
 			if(!node->subTries[c]) {
 				node->subTries[c] = new Trie();
-			}	
-				
+            }
+
 			node->subTries[c]->add(key.substr(1), object);
 		}
-		
 	}
-	
-        std::size_t count() const {
+
+    std::size_t count() const {
 		std::size_t sum = 0;
+
+        if (node->has_object) { sum++; };
 
 		for(const char& c : alphabet) {
 			if(node->subTries[c]) {
@@ -61,37 +65,63 @@ class Trie {
 		return sum;
 	}
 
-        template<typename Visitor>
-        void visit(const std::string& key, Visitor visitor) const {
-		// todo
+    template<typename Visitor>
+    void visit(const std::string &key, Visitor visitor) const {
+        if (key.length() == 0) {
+            visitObjects(visitor);
+        } else {
+            char c = key[0];
+
+            assert((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+
+            if (c >= 'A' && c <= 'Z') {
+                c += 32; // convert upper to lower case
+            }
+
+            if (!node->subTries[c]) {
+                return;
+            } else {
+                node->subTries[c]->visit(key.substr(1), visitor);
+            }
+        }
 	}
 
-    private:
+private:
+    template<typename Visitor>
+    void visitObjects(Visitor visitor) const {
+        if (node->has_object) { visitor(node->object); };
+
+        for (const char &c : alphabet) {
+            if (node->subTries[c]) {
+                node->subTries[c]->visitObjects(visitor);
+            }
+        }
+    }
+
 	struct Node {
-	    const T* object; // pointer to constant data
-            std::map<char,Trie*> subTries;
+        T object;
+        bool has_object;
+        std::map<char, Trie *> subTries;
 
-            Node() : object{nullptr} {
-                for(const char& c : alphabet) {
-                    subTries[c] = nullptr;
-                }
+        Node() : object{}, has_object{false} {
+            for (const char &c : alphabet) {
+                subTries[c] = nullptr;
             }
+        }
 
-            Node(const Node& other) : object { other.object } {
-                for(const char& c : alphabet) {
-                    subTries[c] = other.subTries.at(c);
-                }
+        Node(const Node &other) : object{other.object}, has_object{true} {
+            for (const char &c : alphabet) {
+                subTries[c] = other.subTries.at(c);
             }
+        }
 
-            ~Node() {
-                delete object;
-                object = nullptr;
-                for(const char& c : alphabet) {
-                    delete subTries[c];
-                    subTries[c] = nullptr;
-                }
+        ~Node() {
+            for (const char &c : alphabet) {
+                delete subTries[c];
+                subTries[c] = nullptr;
             }
-        };
+        }
+    };
 	Node* node;
 };
 
